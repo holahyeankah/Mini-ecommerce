@@ -1,0 +1,9 @@
+body{
+    margin:0;
+    padding:0;
+    background:linear-gradient(to right, #333745,#3337);
+    background-size:cover ;
+    min-width:100vh  
+        
+        
+}
