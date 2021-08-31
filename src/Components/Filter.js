@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {filterSize, sortProduct} from '../Actions/productAction'
 
 class Filter extends Component{
     constructor(props){
@@ -7,17 +9,19 @@ class Filter extends Component{
     }
 
     render(){
-        const{count, sort, size, handleChangeSize, handleChangeSort}=this.props
+        const{ sort, size,filterSize, product, sortProduct,  filteredItem}=this.props
+        console.log(sort)
         return(
-            <div className="row">
+            <div className="row mb-3">
                 <div className="col-md-4">
-<label className="text-light mx-2 fw-bold fs-5">{count} {count > 1 ? "products" : "product"} found</label>
+<label className="text-light mx-2 fw-bold fs-5">{filteredItem.length} {filteredItem.length > 1 ?
+ "products" : "product"} found</label>
                 </div>                
                 <div className="col-md-4">
                     <label>
-                       <div className="text-light fw-bold fs-5">Filter size</div> 
+                       <div className="text-light text-center fw-bold fs-5">Filter size</div> 
                         <select className="form-select form-select-md"
-                         value={size} onChange={handleChangeSize}>
+                         value={size} onChange={(e)=>filterSize(product, e.target.value)}>
                             <option value="">All Sizes</option>
                             <option value="x">X</option>
                             <option value="s">S</option>
@@ -32,9 +36,9 @@ class Filter extends Component{
                 </div>
                 <div className="col-md-4">
                 <label>
-                       <div className="text-light fw-bold fs-5">Order by</div> 
+                       <div className="text-light text-center fw-bold fs-5">Order by</div> 
                         <select className="form-select form-select-md"
-                          value={sort} onChange={handleChangeSort}>
+                          value={sort} onChange={(e)=>sortProduct(filteredItem, e.target.value)}>
                             <option value="">Select</option>
                             <option value="lowest-price">Lowest to highest</option>
                             <option value="highest-price">Highest to lowest</option>      
@@ -48,5 +52,12 @@ class Filter extends Component{
         )
     }
 }
+const mapStateToProps=(state)=>({
+    product:state.product.item,
+    filteredItem:state.product.filteredProduct,
+    size:state.product.size,
+    sort:state.product.sort
 
-export default Filter
+})
+
+export default connect(mapStateToProps, {filterSize, sortProduct})(Filter)

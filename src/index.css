@@ -11,20 +11,5 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-/* 
-body{
-  background: #333745
-} */
 
-html, body{
-  padding:0;
-  margin:0;
-  min-width:100vh;
-  height:100%;
-      background: #333745;
-      background-size: 100% 100%;
-      background-repeat:no-repeat
-    
-    
-  }
   

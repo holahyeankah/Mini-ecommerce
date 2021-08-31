@@ -1,38 +1,73 @@
 import React, {Component} from 'react';
 import Util from '../Util';
-import './styles/Product.css'
+import './styles/Product.css';
+import {connect} from 'react-redux';
+import {addCart} from '../Actions/cartActions'
+import {fetchProduct} from '../Actions/productAction'
+
 
 class Product extends Component{
 constructor(props){
     super(props);
-    this.state={}
+    this.state={
+      update:false
+    }
 }
-render(){
-    const{productItem, handleAddCart}=this.props;
-   const productRender=productItem.length > 0 && productItem.map((product, i)=>{  
-      return  <div key={product.id} className="col-md-4">
-            <div className="thumbnail m-1 text-center">
-                <div className="card bg-secondary mt-5">
-                    <div className="view overlay">
-                <a href={`#${product.id}`} className="text-decoration-none" onClick={(e)=>handleAddCart(e, product)}>
-                    <img className="img-fluid w-50"src={`products/${product.sku}_2.jpg`} alt={product.title}/>  
-                   < div className="card-body text-center text-light title fw-lighter fs-6">{product.title}</div>                                                
-                     <div className="text-center text-light fw-bold ">{Util.formatCurrency(product.price)}</div>
-                     <button  type="button" className="btn btn-sm btn-secondary fs-6 mb-1 " onClick={()=>handleAddCart(product)}>
-                         Add cart</button>                                          
-                     </a>                                       
-                </div>
-                </div>             
-            </div>
-        </div>
-    })
-    return(
-        <div className="row">
-{productRender}
 
+
+componentDidMount(){
+ this.getCartItem()
+      
+  };
+
+  
+  getCartItem = () => {
+ const {fetchProduct}= this.props;
+ fetchProduct()
+this.setState({update:true})
+  
+}
+
+
+
+
+render(){
+    const {products, cartItem}=this.props
+    const productItems = products.length > 0 && products.map((product, i) => 
+       <div className="col-md-4" key={product.id}>
+          <div className="thumbnail text-center">
+              <div className="card bg-secondary mx-3 my-3">
+            <a
+              className="text-decoration-none" href={`#${product.id}`}  
+              onClick={(e) => this.props.addCart(cartItem,  product)}         
+            >
+              <img className="img-fluid img-thumbnail" src={`products/${product.sku}_2.jpg`} alt={product.title} />
+              <p className="text-white mt-2">{product.title}</p>
+            </a>
+            <b className="text-white">{Util.formatCurrency(product.price)}</b>
+            <button
+              className="btn btn-md w-50 align-self-center mb-2 btn-secondary"
+              onClick={(e) => this.props.addCart(cartItem, product)}
+            >
+              Add to cart
+            </button>
+          </div>
         </div>
+        </div>
+    ) 
+     
+                                                                  
+    return(
+        <div className="row">     
+{productItems}
+
+  </div>
     )
 }
 }
+const mapStateToProps=(state)=>({
+    products:state.product.filteredProduct,
+    cartItem:state.cart.item
+})
 
-export default Product
+export default connect(mapStateToProps, {fetchProduct, addCart})(Product)
